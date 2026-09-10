@@ -1,0 +1,17 @@
+services:
+  app:
+    build: .
+    container_name: class-records
+    ports:
+      - "3000:3000"
+    environment:
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin123}
+      - NUXT_SESSION_PASSWORD=${NUXT_SESSION_PASSWORD:-please-change-this-32-char-secret-key!}
+      - DB_PATH=/app/data/class-records.db
+      - MIGRATIONS_PATH=/app/server/db/migrations
+    volumes:
+      - class-records-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  class-records-data:
