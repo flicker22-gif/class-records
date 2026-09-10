@@ -1,9 +1,9 @@
 export default defineEventHandler(async (event) => {
-  await requireAdmin(event)
+  const teacher = await requireTeacher(event)
   const { password } = await readBody(event)
   if (!password || password.length < 4) {
-    throw createError({ statusCode: 400, statusMessage: 'Password must be at least 4 characters' })
+    throw createError({ statusCode: 400, statusMessage: '密码至少 4 位' })
   }
-  await setAdminPassword(password)
+  await changeTeacherPassword(teacher.id, String(password))
   return { ok: true }
 })

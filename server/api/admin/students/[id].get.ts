@@ -1,18 +1,17 @@
-import { and, desc, eq } from 'drizzle-orm'
-import { attendance, classPackages, students } from '~/server/db/schema'
+import { desc, eq } from 'drizzle-orm'
+import { attendance, classPackages } from '~/server/db/schema'
+import { getOwnedStudent } from '~/server/utils/helpers'
 
 export default defineEventHandler(async (event) => {
-  await requireAdmin(event)
+  const teacher = await requireTeacher(event)
   const db = useDb()
   const id = Number(getRouterParam(event, 'id'))
   if (!id) {
     throw createError({ statusCode: 400, statusMessage: 'Invalid student id' })
   }
 
-  const student = db.select().from(students).where(eq(students.id, id)).get()
-  if (!student) {
-    throw createError({ statusCode: 404, statusMessage: 'Student not found' })
-  }
+  // 不属于当前老师的学员一律按不存在处理
+  const student = getOwnedStudent(id, teacher.id)
 
   const packages = db
     .select()

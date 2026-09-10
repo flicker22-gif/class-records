@@ -18,7 +18,9 @@ interface DashboardStudent {
   hasExpiredPackages: boolean
 }
 
-const { data, refresh, pending } = await useFetch('/api/admin/dashboard')
+const { data, refresh, pending } = await useFetch('/api/admin/dashboard', {
+  headers: useRequestHeaders(['cookie']),
+})
 
 const students = computed(() => {
   const list = (data.value?.students || []) as DashboardStudent[]

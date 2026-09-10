@@ -40,6 +40,7 @@ async function submit() {
     <h1 class="text-lg font-bold">设置</h1>
 
     <form @submit.prevent="submit" class="bg-white rounded-xl shadow p-4 space-y-4">
+      <h2 class="font-medium text-gray-800">修改我的登录密码</h2>
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-1">新密码</label>
         <input

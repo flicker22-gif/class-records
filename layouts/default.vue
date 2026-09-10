@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { authenticated, logout } = useAuth()
+const { authenticated, teacher, logout } = useAuth()
 const route = useRoute()
 
 const nav = [
@@ -17,13 +17,15 @@ const nav = [
         <NuxtLink to="/dashboard" class="font-bold text-lg text-indigo-600">
           课时管家
         </NuxtLink>
-        <button
-          v-if="authenticated"
-          class="text-sm text-gray-600 hover:text-indigo-600"
-          @click="logout"
-        >
-          退出
-        </button>
+        <div v-if="authenticated && teacher" class="flex items-center gap-3">
+          <span class="text-sm text-gray-600">{{ teacher.displayName }}</span>
+          <button
+            class="text-sm text-gray-600 hover:text-indigo-600"
+            @click="logout"
+          >
+            退出
+          </button>
+        </div>
       </div>
       <nav v-if="authenticated" class="max-w-3xl mx-auto px-4 pb-2 flex gap-4 overflow-x-auto">
         <NuxtLink

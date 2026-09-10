@@ -1,10 +1,33 @@
 import { relations, sql } from 'drizzle-orm'
 import { integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core'
 
+export const teachers = sqliteTable(
+  'teachers',
+  {
+    id: integer('id').primaryKey({ autoIncrement: true }),
+    username: text('username').notNull(),
+    displayName: text('display_name').notNull(),
+    passwordHash: text('password_hash').notNull(),
+    createdAt: integer('created_at', { mode: 'timestamp_ms' })
+      .notNull()
+      .$defaultFn(() => new Date()),
+  },
+  (table) => ({
+    usernameIdx: uniqueIndex('teacher_username_idx').on(table.username),
+  }),
+)
+
+export const teachersRelations = relations(teachers, ({ many }) => ({
+  students: many(students),
+}))
+
 export const students = sqliteTable(
   'students',
   {
     id: integer('id').primaryKey({ autoIncrement: true }),
+    teacherId: integer('teacher_id')
+      .notNull()
+      .references(() => teachers.id, { onDelete: 'cascade' }),
     name: text('name').notNull(),
     phone: text('phone'),
     birthDate: text('birth_date'),
@@ -22,7 +45,8 @@ export const students = sqliteTable(
   }),
 )
 
-export const studentsRelations = relations(students, ({ many }) => ({
+export const studentsRelations = relations(students, ({ one, many }) => ({
+  teacher: one(teachers, { fields: [students.teacherId], references: [teachers.id] }),
   packages: many(classPackages),
   attendance: many(attendance),
 }))

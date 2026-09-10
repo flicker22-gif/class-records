@@ -1,5 +1,5 @@
-import { initAdminPassword } from '../utils/auth'
+import { initTeachers } from '../utils/auth'
 
 export default defineNitroPlugin(async () => {
-  await initAdminPassword()
+  await initTeachers()
 })

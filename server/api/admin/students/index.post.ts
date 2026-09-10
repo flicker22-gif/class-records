@@ -1,9 +1,8 @@
-import { eq } from 'drizzle-orm'
 import { classPackages, students } from '~/server/db/schema'
 import { addMonths, generateShareToken, PACKAGE_OPTIONS } from '~/server/utils/helpers'
 
 export default defineEventHandler(async (event) => {
-  await requireAdmin(event)
+  const teacher = await requireTeacher(event)
   const db = useDb()
   const body = await readBody(event)
   const { name, phone, birthDate, notes, totalClasses } = body
@@ -22,6 +21,7 @@ export default defineEventHandler(async (event) => {
   const student = db
     .insert(students)
     .values({
+      teacherId: teacher.id,
       name: String(name),
       phone: phone ? String(phone) : null,
       birthDate: birthDate ? String(birthDate) : null,

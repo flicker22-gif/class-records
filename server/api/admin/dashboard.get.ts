@@ -3,10 +3,15 @@ import { classPackages, students } from '~/server/db/schema'
 import { LOW_REMAINING_THRESHOLD } from '~/server/utils/helpers'
 
 export default defineEventHandler(async (event) => {
-  await requireAdmin(event)
+  const teacher = await requireTeacher(event)
   const db = useDb()
 
-  const allStudents = db.select().from(students).orderBy(desc(students.createdAt)).all()
+  const allStudents = db
+    .select()
+    .from(students)
+    .where(eq(students.teacherId, teacher.id))
+    .orderBy(desc(students.createdAt))
+    .all()
   const allPackages = db.select().from(classPackages).all()
   const packagesByStudent = new Map<number, typeof allPackages>()
   for (const pkg of allPackages) {

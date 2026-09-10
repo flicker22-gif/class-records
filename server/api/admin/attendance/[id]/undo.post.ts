@@ -1,8 +1,8 @@
 import { and, eq, isNull } from 'drizzle-orm'
-import { attendance, classPackages } from '~/server/db/schema'
+import { attendance, classPackages, students } from '~/server/db/schema'
 
 export default defineEventHandler(async (event) => {
-  await requireAdmin(event)
+  const teacher = await requireTeacher(event)
   const db = useDb()
   const id = Number(getRouterParam(event, 'id'))
   if (!id) {
@@ -16,7 +16,17 @@ export default defineEventHandler(async (event) => {
     .get()
 
   if (!record) {
-    throw createError({ statusCode: 404, statusMessage: 'Attendance record not found or already cancelled' })
+    throw createError({ statusCode: 404, statusMessage: '签到记录不存在或已撤销' })
+  }
+
+  // 只能撤销自己学员的签到
+  const owner = db
+    .select()
+    .from(students)
+    .where(and(eq(students.id, record.studentId), eq(students.teacherId, teacher.id)))
+    .get()
+  if (!owner) {
+    throw createError({ statusCode: 404, statusMessage: '签到记录不存在或已撤销' })
   }
 
   const pkg = db.select().from(classPackages).where(eq(classPackages.id, record.packageId)).get()

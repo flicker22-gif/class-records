@@ -1,7 +1,10 @@
 export default defineEventHandler(async (event) => {
-  const config = useRuntimeConfig()
-  const session = await useSession<{ admin?: boolean }>(event, {
-    password: String(config.sessionPassword),
-  })
-  return { authenticated: !!session.data.admin }
+  const teacher = await getSessionTeacher(event)
+  if (!teacher) {
+    return { authenticated: false, teacher: null }
+  }
+  return {
+    authenticated: true,
+    teacher: { id: teacher.id, username: teacher.username, displayName: teacher.displayName },
+  }
 })

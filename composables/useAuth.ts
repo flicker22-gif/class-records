@@ -1,16 +1,31 @@
+interface TeacherInfo {
+  id: number
+  username: string
+  displayName: string
+}
+
+interface MeResponse {
+  authenticated: boolean
+  teacher: TeacherInfo | null
+}
+
 export function useAuth() {
   const { data, refresh, pending } = useAsyncData(
     'auth-me',
-    () => $fetch('/api/auth/me') as Promise<{ authenticated: boolean }>,
-    { server: true, default: () => ({ authenticated: false }) },
+    () =>
+      $fetch<MeResponse>('/api/auth/me', {
+        headers: useRequestHeaders(['cookie']),
+      }),
+    { server: true, default: () => ({ authenticated: false, teacher: null }) },
   )
 
   const authenticated = computed(() => data.value?.authenticated ?? false)
+  const teacher = computed<TeacherInfo | null>(() => data.value?.teacher ?? null)
 
-  async function login(password: string) {
+  async function login(username: string, password: string) {
     await $fetch('/api/auth/login', {
       method: 'POST',
-      body: { password },
+      body: { username, password },
     })
     await refresh()
   }
@@ -30,6 +45,7 @@ export function useAuth() {
 
   return {
     authenticated,
+    teacher,
     loading: pending,
     login,
     logout,

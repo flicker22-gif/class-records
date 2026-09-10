@@ -5,7 +5,9 @@ const route = useRoute()
 const id = Number(route.params.id)
 const origin = useRequestURL().origin
 
-const { data, refresh, pending } = await useFetch(`/api/admin/students/${id}`)
+const { data, refresh, pending } = await useFetch(`/api/admin/students/${id}`, {
+  headers: useRequestHeaders(['cookie']),
+})
 
 const parentUrl = computed(() => {
   if (!data.value?.student) return ''

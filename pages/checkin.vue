@@ -2,7 +2,9 @@
 definePageMeta({ middleware: 'auth', layout: 'default' })
 
 const classDate = ref(today())
-const { data, refresh, pending } = await useFetch('/api/admin/dashboard')
+const { data, refresh, pending } = await useFetch('/api/admin/dashboard', {
+  headers: useRequestHeaders(['cookie']),
+})
 
 const busy = ref<number | null>(null)
 const message = ref('')
