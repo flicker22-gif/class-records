@@ -15,6 +15,13 @@
       "when": 1789022150969,
       "tag": "0001_multi_teachers",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1789035694532,
+      "tag": "0002_nostalgic_nightcrawler",
+      "breakpoints": true
     }
   ]
 }

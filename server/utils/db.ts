@@ -17,7 +17,9 @@ export function useDb() {
   if (db) return db
 
   const config = useRuntimeConfig()
-  const dbPath = String(config.dbPath)
+  // 优先读取运行时环境变量：生产构建后 runtimeConfig 默认值已固化，
+  // docker-compose 通过 DB_PATH 覆盖数据库位置时需要在此生效
+  const dbPath = process.env.DB_PATH || String(config.dbPath)
   ensureDir(path.dirname(dbPath))
 
   const sqlite = new Database(dbPath)

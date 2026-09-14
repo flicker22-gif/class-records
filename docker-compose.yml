@@ -8,6 +8,13 @@ services:
       - NUXT_SESSION_PASSWORD=${NUXT_SESSION_PASSWORD:-please-change-this-32-char-secret-key!}
       - DB_PATH=/app/data/class-records.db
       - MIGRATIONS_PATH=/app/server/db/migrations
+      - NUXT_SMS_PROVIDER=${NUXT_SMS_PROVIDER:-console}
+      - NUXT_SMS_ALIYUN_ACCESS_KEY_ID=${NUXT_SMS_ALIYUN_ACCESS_KEY_ID:-}
+      - NUXT_SMS_ALIYUN_ACCESS_KEY_SECRET=${NUXT_SMS_ALIYUN_ACCESS_KEY_SECRET:-}
+      - NUXT_SMS_ALIYUN_ENDPOINT=${NUXT_SMS_ALIYUN_ENDPOINT:-dysmsapi.aliyuncs.com}
+      - NUXT_SMS_SIGN_NAME=${NUXT_SMS_SIGN_NAME:-}
+      - NUXT_SMS_TEMPLATE_LOW=${NUXT_SMS_TEMPLATE_LOW:-}
+      - NUXT_SMS_TEMPLATE_EXPIRING=${NUXT_SMS_TEMPLATE_EXPIRING:-}
     volumes:
       - class-records-data:/app/data
     restart: unless-stopped

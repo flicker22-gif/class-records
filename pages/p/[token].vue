@@ -6,6 +6,11 @@ const token = String(route.params.token)
 
 const { data, pending, error } = await useFetch(`/api/public/students/${token}`)
 
+const daysLeft = computed(() => {
+  const pkg = data.value?.activePackage
+  return pkg ? Math.max(0, Math.ceil((pkg.expiresAt - Date.now()) / 86400000)) : null
+})
+
 function formatDate(ts: number) {
   return new Date(ts).toLocaleDateString('zh-CN')
 }
@@ -44,6 +49,12 @@ function formatDate(ts: number) {
           class="mt-2 inline-block bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm font-medium"
         >
           课时不多，请及时续费
+        </div>
+        <div
+          v-if="data.activePackage && daysLeft !== null && daysLeft <= 7"
+          class="mt-2 ml-2 inline-block bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-sm font-medium"
+        >
+          将于 {{ daysLeft }} 天后到期
         </div>
       </div>
       <div v-else class="text-gray-500">

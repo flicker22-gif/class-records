@@ -4,7 +4,10 @@
   "private": true,
   "packageManager": "pnpm@10.14.0",
   "pnpm": {
-    "onlyBuiltDependencies": ["better-sqlite3", "esbuild"]
+    "onlyBuiltDependencies": [
+      "better-sqlite3",
+      "esbuild"
+    ]
   },
   "scripts": {
     "build": "nuxt build",
@@ -14,6 +17,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@alicloud/dysmsapi20170525": "^4.6.0",
     "@nuxtjs/tailwindcss": "^6.14.0",
     "bcryptjs": "^3.0.3",
     "better-sqlite3": "^13.0.3",
